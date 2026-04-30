@@ -1,0 +1,953 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MeliPro F&H · Painel CA</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --meli:#FFE600;--meli2:#2D3277;--meli3:#3483FA;
+  --ok:#16A34A;--warn:#D97706;--bad:#DC2626;
+  --bg:#F4F5F7;--border:#E5E7EB;--border2:#D1D5DB;
+  --text:#111827;--text2:#6B7280;--text3:#9CA3AF;
+  --ca:#2563EB;--fh:#7C3AED;--oth:#B45309;
+  --font:'Nunito Sans',system-ui,sans-serif;
+  --font-h:'Nunito',system-ui,sans-serif;
+  --mono:'SF Mono','Fira Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px}
+
+/* STICKY SHELL */
+.sticky{position:sticky;top:0;z-index:100;background:var(--bg)}
+
+/* HEADER */
+.header{background:var(--meli2);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:50px}
+.logo-pill{background:var(--meli);border-radius:7px;padding:3px 10px;font-family:var(--font-h);font-weight:800;font-size:13px;color:var(--meli2)}
+.htitle{font-family:var(--font-h);font-weight:700;font-size:14px;color:#fff;margin-left:10px}
+.hsub{font-size:10px;color:rgba(255,255,255,.5);margin-left:6px}
+.hbadge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;font-family:var(--mono)}
+
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;padding:0 20px;overflow-x:auto}
+.tab{padding:10px 16px 9px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;font-family:var(--font-h);transition:all .12s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--meli3);border-bottom-color:var(--meli3)}
+.tab-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+/* FILTER BAR */
+.fbar{display:flex;align-items:center;gap:8px;padding:9px 20px;background:#fff;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.flabel{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+select.fsel{background:#fff;border:1.5px solid var(--border);color:var(--text2);font-size:11px;font-weight:600;padding:4px 8px;border-radius:7px;cursor:pointer;font-family:var(--font);outline:none}
+select.fsel:focus{border-color:var(--meli3)}
+.fts{font-size:9px;color:var(--text3);font-family:var(--mono);margin-left:auto}
+
+/* CONTENT */
+.content{padding:14px 20px}
+.section{display:none}.section.active{display:block}
+.sec-head{font-family:var(--font-h);font-weight:700;font-size:12px;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* 3 BLOCKS */
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.block{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.block-hdr{padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.block-title{font-family:var(--font-h);font-weight:800;font-size:13px;color:#fff}
+.block-sub{font-size:9px;color:rgba(255,255,255,.6);margin-top:1px}
+.blbl{font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.2);color:#fff;font-family:var(--font-h)}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.mc{background:#fff;padding:10px 12px}
+.mc-label{font-size:8px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mc-val{font-size:17px;font-weight:800;font-family:var(--font-h);line-height:1;letter-spacing:-.4px}
+.mc-sob{font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px;margin-top:4px;display:inline-block;font-family:var(--mono)}
+.sob-fh{background:#F5F3FF;color:var(--fh)}.sob-oth{background:#FFFBEB;color:var(--oth)}
+.mc-rows{margin-top:5px;display:flex;flex-direction:column;gap:3px}
+.mc-row{display:flex;justify-content:space-between;align-items:center;font-size:9px;padding:1px 0}
+.mc-rl{color:var(--text3);font-weight:500}.mc-rv{font-weight:700;font-family:var(--mono);font-size:9px}
+
+/* TABLE */
+.tbl-wrap{border-radius:10px;border:1px solid var(--border);overflow:hidden;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.stbl{width:100%;border-collapse:collapse;min-width:760px}
+.stbl thead th{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:7px 10px;text-align:right;white-space:nowrap;font-family:var(--font-h)}
+.stbl thead tr:first-child th{color:#fff}
+.stbl thead tr:last-child th{color:var(--text3);border-bottom:2px solid var(--border)}
+.stbl th.L{text-align:left}
+.stbl td{padding:6px 10px;border-bottom:1px solid #F3F4F6;text-align:right;white-space:nowrap;font-family:var(--mono);font-size:11px}
+.stbl td.L{text-align:left;font-family:var(--font)}
+.stbl tr.tot td{font-weight:700;border-top:2px solid;font-size:11px}
+.stbl tr.d1r{cursor:pointer;background:#FAFAFA}
+.stbl tr.d1r td{font-weight:700;border-top:1px solid var(--border2)}
+.stbl tr.d1r:hover td,.stbl tr.d2r:hover td{background:#F5F3FF}
+.stbl tr.d2r td{font-size:10px;color:var(--text2)}
+.stbl tr.d2r td.L{padding-left:22px}
+.vbar{display:inline-block;width:3px;height:12px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.chev{font-size:9px;color:var(--text3);transition:transform .15s;display:inline-block;margin-right:3px}
+.chev.open{transform:rotate(90deg)}
+.pb{display:inline-block;vertical-align:middle;width:30px;height:3px;background:#E5E7EB;border-radius:2px;margin-left:3px}
+.pf{height:3px;border-radius:2px;display:block;max-width:100%}
+.ok{color:var(--ok);font-weight:700}.warn{color:var(--warn);font-weight:700}.bad{color:var(--bad);font-weight:700}
+.pos{color:var(--ok)}.neg{color:var(--bad)}.dim{color:var(--text3)}
+
+/* HIGHS / LOWS */
+.hl-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.hl-box{border-radius:10px;border:1px solid var(--border);overflow:hidden;background:#fff}
+.hl-hdr{padding:9px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.hl-hdr.H{background:#F0FDF4;border-bottom-color:#BBF7D0}
+.hl-hdr.L{background:#FFF1F2;border-bottom-color:#FECDD3}
+.hl-title{font-family:var(--font-h);font-weight:800;font-size:12px}
+.hl-title.H{color:var(--ok)}.hl-title.L{color:var(--bad)}
+.hl-sub{font-size:9px;color:var(--text2);margin-left:auto}
+.hl-item{padding:8px 14px;border-bottom:1px solid #F9FAFB;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start}
+.hl-item:last-child{border-bottom:none}
+.hl-m{font-size:8px;font-weight:700;padding:1px 5px;border-radius:5px;font-family:var(--font-h);white-space:nowrap}
+.m-nmv{background:#DBEAFE;color:#1D4ED8}.m-nsi{background:#D1FAE5;color:#065F46}
+.hl-name{font-size:11px;font-weight:600}
+.hl-d1{font-size:9px;color:var(--text3);margin-top:1px}
+.hl-right{text-align:right}
+.hl-num{font-size:11px;font-weight:700;font-family:var(--mono)}
+.hl-gap{font-size:9px;font-family:var(--mono);margin-top:1px}
+
+/* DRILL TABS */
+.dtabs{display:flex;gap:4px;margin-bottom:8px}
+.dtab{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);color:var(--text2);transition:all .12s}
+.dtab.a-ca{background:#EFF6FF;border-color:var(--ca);color:var(--ca)}
+.dtab.a-fh{background:#F5F3FF;border-color:var(--fh);color:var(--fh)}
+.dtab.a-oth{background:#FFFBEB;border-color:var(--oth);color:var(--oth)}
+.tag-d{font-size:8px;font-weight:600;padding:1px 5px;border-radius:5px;background:#FFFBEB;color:var(--oth);font-family:var(--font-h)}
+
+/* OTHERS TABLE */
+.others-tbl{border-radius:10px;border:1px solid var(--border);overflow:hidden;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-top:16px}
+
+/* DIARIZADO */
+.diar-tbl{width:100%;border-collapse:collapse;min-width:900px}
+.diar-tbl thead th{background:var(--meli2);color:#fff;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:7px 10px;text-align:right;white-space:nowrap;font-family:var(--font-h);position:sticky;top:0;z-index:2}
+.diar-tbl thead th.L{text-align:left}
+.diar-tbl td{padding:6px 10px;border-bottom:1px solid #F3F4F6;text-align:right;font-family:var(--mono);font-size:11px;white-space:nowrap}
+.diar-tbl td.L{text-align:left;font-family:var(--font)}
+.diar-tbl tr.mtg td{color:var(--text3);background:#FAFAFA}
+.diar-tbl tr.mtg td.proj{color:var(--meli3);font-style:italic;font-weight:600}
+.diar-tbl tr.sep td{border-top:2px solid var(--border2)}
+.wbadge{background:#F3F4F6;color:var(--text3);font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;font-family:var(--font-h)}
+.mtd-pill{background:#DBEAFE;color:#1D4ED8;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:var(--font-h)}
+.mtg-pill{background:#F3F4F6;color:var(--text3);font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:var(--font-h)}
+.diar-scroll{overflow-y:auto;max-height:500px;border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.diar-scroll::-webkit-scrollbar{width:4px;height:4px}
+.diar-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* SETUP */
+.setup-tabs{display:flex;gap:4px;margin-bottom:10px}
+.stab{padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);color:var(--text2)}
+.stab.active{background:var(--bg);border-color:var(--meli3);color:var(--meli3)}
+.setup-section{display:none}.setup-section.active{display:block}
+.vpill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font-h)}
+.vp-f{background:#EDE9FE;color:var(--fh)}.vp-h{background:#D1FAE5;color:#059669}.vp-l{background:#FFEDD5;color:var(--oth)}
+.cycle-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:#EFF6FF;color:var(--meli3);font-family:var(--font-h)}
+.status-ok{background:#D1FAE5;color:var(--ok);font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font-h)}
+.setup-search{background:#fff;border:1.5px solid var(--border);color:var(--text);font-size:11px;padding:5px 10px;border-radius:7px;outline:none;width:220px;font-family:var(--font)}
+.setup-search:focus{border-color:var(--meli3)}
+</style>
+</head><body>
+
+<div class="sticky">
+<div class="header">
+  <div style="display:flex;align-items:center">
+    <div class="logo-pill">MeliPro</div>
+    <div class="htitle">F&H — Painel CA</div>
+    <div class="hsub">Carteira Assessorada · Abril 2026 · Ciclo 3+9</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span class="hbadge" id="upd-badge">23/04 · D-1</span>
+    <span class="hbadge">3+9</span>
+    <span class="hbadge" style="background:rgba(22,163,74,.2);border-color:rgba(22,163,74,.4)">✓ Validado</span>
+  </div>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('summary',this)"><span class="tab-dot" style="background:var(--ca)"></span>Summary CA</div>
+  <div class="tab" onclick="showTab('fh',this)"><span class="tab-dot" style="background:var(--fh)"></span>Gestão F&H</div>
+  <div class="tab" onclick="showTab('others',this)"><span class="tab-dot" style="background:var(--oth)"></span>Others</div>
+  <div class="tab" onclick="showTab('diarizado',this)"><span class="tab-dot" style="background:var(--warn)"></span>Diarizado</div>
+  <div class="tab" onclick="showTab('setup',this)"><span class="tab-dot" style="background:#374151"></span>Setup</div>
+</div>
+<div class="fbar">
+  <span class="flabel">Ciclo</span>
+  <select class="fsel" id="g-ciclo"><option>3+9 — Abril 2026</option></select>
+  <span class="flabel" style="margin-left:8px">Categoria</span>
+  <select class="fsel" id="g-d1" onchange="renderAll()">
+    <option value="">Todas</option>
+    <option>FURNITURE</option><option>HOUSEHOLD ITEMS</option>
+    <option>MATTRESSES & SOMMIER</option><option>TEXTILES</option>
+    <option>DECOR</option><option>HABERDASHERY</option>
+  </select>
+  <span class="flabel" style="margin-left:8px">Período</span>
+  <select class="fsel"><option>MTD · até 23/Abr</option></select>
+  <span class="fts">CA: R$301.3M · Gap: −R$1.1M ✓ · F&H 82.3% · Others 17.7%</span>
+</div>
+</div><!-- /sticky -->
+
+<div class="content">
+
+<!-- ═══ 1. SUMMARY CA ═══ -->
+<div class="section active" id="tab-summary">
+  <div class="sec-head">Visão por Bloco de Gestão</div>
+  <div class="three-col" id="sum-blocks"></div>
+  <div class="sec-head">Drill-down por Categoria</div>
+  <div class="dtabs">
+    <button class="dtab a-ca" id="dt-ca" onclick="setDrill('ca')">CA Total</button>
+    <button class="dtab" id="dt-fh" onclick="setDrill('fh')">Gestão F&H</button>
+    <button class="dtab" id="dt-oth" onclick="setDrill('oth')">Gestão Others <span class="tag-d">Meta derivada</span></button>
+  </div>
+  <div class="tbl-wrap"><table class="stbl"><thead id="dh"></thead><tbody id="db"></tbody></table></div>
+  <div class="hl-row" id="hl-row"></div>
+</div>
+
+<!-- ═══ 2. GESTÃO F&H ═══ -->
+<div class="section" id="tab-fh">
+  <div class="sec-head">Performance da Carteira MeliPro F&H</div>
+  <div id="fh-kpi-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px"></div>
+  <div class="fbar" style="position:static;margin:-14px -20px 14px;padding:8px 20px">
+    <span class="flabel">KAM</span>
+    <select class="fsel" id="fh-kam" onchange="renderFH()"><option value="">Todos os KAMs</option></select>
+    <span class="flabel" style="margin-left:8px">Visão</span>
+    <select class="fsel" id="fh-view" onchange="renderFH()">
+      <option value="total">Total Seller (meta KAM)</option>
+      <option value="fh">F&H do Seller (contribuição vertical)</option>
+    </select>
+  </div>
+  <div class="tbl-wrap"><table class="stbl"><thead id="fh-head"></thead><tbody id="fh-body"></tbody></table></div>
+</div>
+
+<!-- ═══ 3. OTHERS ═══ -->
+<div class="section" id="tab-others">
+  <div class="sec-head">Gestão Others — Sellers CA fora da carteira F&H</div>
+  <div id="oth-kpi-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px"></div>
+  <div class="sec-head" style="margin-top:4px">Top Sellers Others por Categoria</div>
+  <div class="tbl-wrap"><table class="stbl">
+    <thead><tr>
+      <th class="L" style="background:var(--oth);min-width:200px">Seller</th>
+      <th style="background:var(--oth)">D1</th>
+      <th style="background:var(--oth)">NMV MTD</th>
+      <th style="background:var(--oth)">NSI</th>
+      <th style="background:var(--oth)">NASP</th>
+      <th style="background:var(--oth)">Rebate</th>
+    </tr></thead>
+    <tbody id="oth-body"></tbody>
+  </table></div>
+</div>
+
+<!-- ═══ 4. DIARIZADO ═══ -->
+<div class="section" id="tab-diarizado">
+  <div class="fbar" style="position:static;margin:-14px -20px 14px;padding:8px 20px">
+    <span class="flabel">Visão</span>
+    <button class="dtab a-ca" id="dv-ca" onclick="setDiarView('ca')">CA Total</button>
+    <button class="dtab" id="dv-fh" onclick="setDiarView('fh')">Gestão F&H</button>
+    <button class="dtab" id="dv-oth" onclick="setDiarView('oth')">Others</button>
+  </div>
+  <div id="diar-kpi-row" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px"></div>
+  <div class="sec-head">Performance Diária — Abril 2026</div>
+  <div class="diar-scroll">
+    <table class="diar-tbl"><thead id="diar-head"></thead><tbody id="diar-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ═══ 5. SETUP ═══ -->
+<div class="section" id="tab-setup">
+  <div class="setup-tabs">
+    <button class="stab active" onclick="showSetup('equipe',this)">Equipe MeliPro</button>
+    <button class="stab" onclick="showSetup('sellers',this)">Grupos de Contas</button>
+    <button class="stab" onclick="showSetup('metas',this)">Metas IBP</button>
+  </div>
+  <div class="setup-section active" id="setup-equipe">
+    <div class="sec-head">Equipe MeliPro — Ciclo 3+9</div>
+    <div class="tbl-wrap"><table class="stbl">
+      <thead><tr><th class="L" style="background:var(--meli2)">Executivo</th><th style="background:var(--meli2);text-align:left">Time</th><th style="background:var(--meli2)">Ciclo IBP</th><th style="background:var(--meli2)">Vigência</th><th style="background:var(--meli2)">Status</th></tr></thead>
+      <tbody id="setup-equipe-body"></tbody>
+    </table></div>
+  </div>
+  <div class="setup-section" id="setup-sellers">
+    <div class="fbar" style="position:static;margin:0 0 10px;padding:0">
+      <input class="setup-search" id="seller-q" placeholder="Buscar por seller, grupo ou KAM..." oninput="renderSetupSellers()">
+    </div>
+    <div class="sec-head" id="setup-sellers-count">Grupos de Contas</div>
+    <div class="tbl-wrap" style="max-height:440px;overflow-y:auto"><table class="stbl">
+      <thead><tr>
+        <th class="L" style="background:var(--meli2)">Seller ID</th>
+        <th class="L" style="background:var(--meli2)">Seller Name</th>
+        <th class="L" style="background:var(--meli2)">Grupo de Contas</th>
+        <th class="L" style="background:var(--meli2)">KAM</th>
+        <th style="background:var(--meli2);text-align:left">Time</th>
+      </tr></thead>
+      <tbody id="setup-sellers-body"></tbody>
+    </table></div>
+  </div>
+  <div class="setup-section" id="setup-metas">
+    <div class="sec-head">Metas IBP por Seller — Ciclo 3+9 · Abril 2026</div>
+    <div class="tbl-wrap"><table class="stbl">
+      <thead><tr>
+        <th class="L" style="background:var(--meli2)">Grupo de Contas</th>
+        <th class="L" style="background:var(--meli2)">KAM</th>
+        <th style="background:var(--meli2)">Meta Jan</th>
+        <th style="background:var(--meli2)">Meta Fev</th>
+        <th style="background:var(--meli2)">Meta Mar</th>
+        <th style="background:var(--meli2)">Meta Abr</th>
+        <th style="background:var(--meli2)">Meta FY</th>
+      </tr></thead>
+      <tbody id="setup-metas-body"></tbody>
+    </table></div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ══════════════════════════════════════════
+// DADOS REAIS (calculados de 3 fontes BQ/Sheets)
+// ══════════════════════════════════════════
+const TOTALS={"ca_nmv":301280371.13,"ca_nsi":1379246,"ca_reb":13605964.03,"ca_meta":302405324.29,"fh_nmv":247951269.25,"oth_nmv":53329101.88};
+
+const SPLITS={
+  "FURNITURE":{"ca_nmv":157244723.18,"ca_nsi":301877,"ca_reb":7940000,"ca_meta":139692566,"fh_sh":0.9138,"oth_sh":0.0862,"fh_nmv":143674000,"oth_nmv":13571000,"fh_nsi":275820,"oth_nsi":26057,"fh_reb":7253000,"oth_reb":687000,"fh_meta":127649000,"oth_meta":12044000},
+  "HOUSEHOLD ITEMS":{"ca_nmv":77854468.43,"ca_nsi":556614,"ca_reb":3610000,"ca_meta":96219811,"fh_sh":0.5557,"oth_sh":0.4443,"fh_nmv":43282000,"oth_nmv":34572000,"fh_nsi":309349,"oth_nsi":247265,"fh_reb":2007000,"oth_reb":1603000,"fh_meta":53474000,"oth_meta":42746000},
+  "MATTRESSES & SOMMIER":{"ca_nmv":30395361,"ca_nsi":33830,"ca_reb":1200000,"ca_meta":33995837,"fh_sh":0.9629,"oth_sh":0.0371,"fh_nmv":29265000,"oth_nmv":1130000,"fh_nsi":32573,"oth_nsi":1257,"fh_reb":1155000,"oth_reb":45000,"fh_meta":32731000,"oth_meta":1265000},
+  "TEXTILES":{"ca_nmv":25833710,"ca_nsi":369434,"ca_reb":610000,"ca_meta":26512857,"fh_sh":0.8973,"oth_sh":0.1027,"fh_nmv":23180000,"oth_nmv":2654000,"fh_nsi":331488,"oth_nsi":37946,"fh_reb":547000,"oth_reb":63000,"fh_meta":23792000,"oth_meta":2721000},
+  "DECOR":{"ca_nmv":9565873,"ca_nsi":104895,"ca_reb":240000,"ca_meta":4327826,"fh_sh":0.8398,"oth_sh":0.1602,"fh_nmv":8034000,"oth_nmv":1532000,"fh_nsi":88110,"oth_nsi":16785,"fh_reb":202000,"oth_reb":38000,"fh_meta":3634000,"oth_meta":693000},
+  "HABERDASHERY":{"ca_nmv":386236,"ca_nsi":12596,"ca_reb":10600,"ca_meta":341980,"fh_sh":0.8876,"oth_sh":0.1124,"fh_nmv":343000,"oth_nmv":43000,"fh_nsi":11183,"oth_nsi":1413,"fh_reb":9400,"oth_reb":1200,"fh_meta":303000,"oth_meta":38000}
+};
+
+const D2={
+  "FURNITURE":[
+    {d2:"LIVING & DININGROOM FURNITURE",ca_nmv:47348712,ca_nsi:80868,ca_reb:1850000,ca_meta:44522391,fh_sh:.97},
+    {d2:"STORAGE FURNITURE",ca_nmv:39149880,ca_nsi:57454,ca_reb:1980000,ca_meta:23503851,fh_sh:.92},
+    {d2:"OFFICE FURNITURE",ca_nmv:30518702,ca_nsi:71109,ca_reb:1420000,ca_meta:24921226,fh_sh:.88},
+    {d2:"KITCHEN FURNITURE",ca_nmv:21951602,ca_nsi:44964,ca_reb:1140000,ca_meta:11145330,fh_sh:.95},
+    {d2:"BEDROOM FURNITURE",ca_nmv:12125967,ca_nsi:20163,ca_reb:630000,ca_meta:13549884,fh_sh:.94},
+    {d2:"OUTDOOR FURNITURE",ca_nmv:5049024,ca_nsi:21114,ca_reb:260000,ca_meta:12372896,fh_sh:.82},
+    {d2:"FURNITURE SPARE PARTS & ACC",ca_nmv:620419,ca_nsi:5402,ca_reb:32000,ca_meta:6709410,fh_sh:.71},
+    {d2:"OTHER FURNITURE",ca_nmv:480417,ca_nsi:803,ca_reb:25000,ca_meta:2967578,fh_sh:.78},
+  ],
+  "HOUSEHOLD ITEMS":[
+    {d2:"KITCHEN HOME",ca_nmv:59444111,ca_nsi:255184,ca_reb:2760000,ca_meta:50011489,fh_sh:.48},
+    {d2:"TABLETOP",ca_nmv:5015879,ca_nsi:109444,ca_reb:232000,ca_meta:15732228,fh_sh:.52},
+    {d2:"CLEANING & LAUNDRY",ca_nmv:6663797,ca_nsi:68349,ca_reb:308000,ca_meta:9281882,fh_sh:.61},
+    {d2:"ORGANIZATION",ca_nmv:4457401,ca_nsi:78217,ca_reb:206000,ca_meta:9789795,fh_sh:.55},
+    {d2:"BATHROOM",ca_nmv:1351929,ca_nsi:20817,ca_reb:63000,ca_meta:5743509,fh_sh:.44},
+    {d2:"GRILLS & OUTDOOR COOKING",ca_nmv:528256,ca_nsi:11944,ca_reb:24000,ca_meta:3976404,fh_sh:.38},
+    {d2:"BAR, WINE & ACC",ca_nmv:393095,ca_nsi:12059,ca_reb:18000,ca_meta:1643038,fh_sh:.42},
+    {d2:"FIREPLACES",ca_nmv:0,ca_nsi:600,ca_reb:0,ca_meta:41466,fh_sh:.3},
+  ],
+  "MATTRESSES & SOMMIER":[
+    {d2:"MATTRESSES",ca_nmv:16569834,ca_nsi:17246,ca_reb:520000,ca_meta:17553722,fh_sh:.97},
+    {d2:"MATTRESSES & SOMMIER SETS",ca_nmv:12412322,ca_nsi:12411,ca_reb:512000,ca_meta:12722399,fh_sh:.96},
+    {d2:"SOMMIER BASES",ca_nmv:1413205,ca_nsi:3581,ca_reb:155000,ca_meta:3229284,fh_sh:.94},
+    {d2:"MASSAGING MATTRESSES",ca_nmv:0,ca_nsi:592,ca_reb:0,ca_meta:490430,fh_sh:.88},
+  ],
+  "TEXTILES":[
+    {d2:"BEDROOM TEXTILES",ca_nmv:12686599,ca_nsi:142856,ca_reb:280000,ca_meta:10867285,fh_sh:.94},
+    {d2:"CURTAINS, BLINDS AND ACC",ca_nmv:6228329,ca_nsi:55391,ca_reb:145000,ca_meta:5144169,fh_sh:.92},
+    {d2:"BATHROOM TEXTILES",ca_nmv:3136032,ca_nsi:95474,ca_reb:73000,ca_meta:2901374,fh_sh:.91},
+    {d2:"CARPETS",ca_nmv:2193796,ca_nsi:36814,ca_reb:51000,ca_meta:3005985,fh_sh:.85},
+    {d2:"DINING & KITCHEN TEXTILES",ca_nmv:976727,ca_nsi:28198,ca_reb:23000,ca_meta:2561362,fh_sh:.82},
+    {d2:"LIVINGROOM TEXTILES",ca_nmv:612227,ca_nsi:10701,ca_reb:14000,ca_meta:2032682,fh_sh:.87},
+  ],
+  "DECOR":[
+    {d2:"MIRRORS & DECORATIVE ART",ca_nmv:6836912,ca_nsi:45123,ca_reb:171000,ca_meta:1396365,fh_sh:.92},
+    {d2:"WALLPAPERS & VINILS",ca_nmv:1947992,ca_nsi:24891,ca_reb:49000,ca_meta:735766,fh_sh:.88},
+    {d2:"ARTIFICIAL FLOWERS AND PLANTS",ca_nmv:389705,ca_nsi:8743,ca_reb:9500,ca_meta:435749,fh_sh:.72},
+    {d2:"ORNAMENTS",ca_nmv:177763,ca_nsi:9354,ca_reb:4300,ca_meta:540168,fh_sh:.58},
+    {d2:"CHRISTMAS DECOR",ca_nmv:47786,ca_nsi:8811,ca_reb:1200,ca_meta:622646,fh_sh:.45},
+    {d2:"CANDLES AND ACC",ca_nmv:6804,ca_nsi:4213,ca_reb:150,ca_meta:260215,fh_sh:.31},
+  ],
+  "HABERDASHERY":[{d2:"HABERDASHERY",ca_nmv:386236,ca_nsi:12596,ca_reb:10600,ca_meta:341980,fh_sh:.89}]
+};
+
+const TOP_OTH={
+  "FURNITURE":[{sid:1046986303,name:"LOJAOFICIALCASASBAHIA",nmv:3686860},{sid:304410345,name:"PICHAUINFORMATICA",nmv:1864662},{sid:1375734583,name:"THE_BLACK_TOOLS",nmv:1068949},{sid:1212138371,name:"ELETROSID",nmv:641282},{sid:453531051,name:"BELAMAGAZINE",nmv:580044}],
+  "HOUSEHOLD ITEMS":[{sid:1426398299,name:"ELECTROLUXFULL",nmv:4337808},{sid:1420003102,name:"ELETRO.COM",nmv:2232551},{sid:212266509,name:"BUMPERMAGAZINEE",nmv:1917481},{sid:1109461744,name:"DIRETOCOMVOCEFULL",nmv:1590349},{sid:1046986303,name:"LOJAOFICIALCASASBAHIA",nmv:1309888}],
+  "MATTRESSES & SOMMIER":[{sid:1046986303,name:"LOJAOFICIALCASASBAHIA",nmv:847456},{sid:337352780,name:"RELAXMEDIC_",nmv:78341},{sid:760771836,name:"LOJAS KOERICH",nmv:76219}],
+  "TEXTILES":[{sid:212266509,name:"BUMPERMAGAZINEE",nmv:1120344},{sid:453531051,name:"BELAMAGAZINE",nmv:890221},{sid:1046986303,name:"LOJAOFICIALCASASBAHIA",nmv:430189}],
+  "DECOR":[{sid:153594,name:"TEM_DE_TUDO_MULTI_SHOP",nmv:452981},{sid:212266509,name:"BUMPERMAGAZINEE",nmv:381442},{sid:1046986303,name:"LOJAOFICIALCASASBAHIA",nmv:312009}],
+  "HABERDASHERY":[{sid:212266509,name:"BUMPERMAGAZINEE",nmv:28341}]
+};
+
+const EQUIPE=[
+  {e:"Alexandre de Alencar",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Ana Carolina Kühl Coscarelli",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Bruna Silva Soares",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Cintia Faraco Queiroz",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Gabriela Margutti",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Luca Santarlasci",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Lucas Sanches",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Tatiê Almeida",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Aline Marossi Girasole",t:"furn",tl:"MeliPro Furnishing",c:"3+9",vi:"2026-04-01"},
+  {e:"Ane Elisa Silva Bicudo",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Camila Carvalho",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Emily Paulo Chiconi",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Juliana De Carvalho",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Larissa Santos Moraes",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Vanessa Resende Conte",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Maria Rita Onias",t:"house",tl:"MeliPro Houseware",c:"3+9",vi:"2026-04-01"},
+  {e:"Andre Luiz Dos Santos Nogueira",t:"light",tl:"MeliPro Light F&H",c:"3+9",vi:"2026-04-01"},
+];
+
+const SELLERS_CTRL=[
+  {sid:"171391268",sn:"COSTARICA COLCHOES",gr:"COSTA RICA COLCHÕES",k:"Alexandre de Alencar",t:"furn"},
+  {sid:"477588032",sn:"EMMA BRASIL",gr:"EMMA",k:"Alexandre de Alencar",t:"furn"},
+  {sid:"262435141",sn:"ESPLANADA MÓVEIS",gr:"ESPLANADA",k:"Alexandre de Alencar",t:"furn"},
+  {sid:"147072750",sn:"LUVINCO",gr:"LUVINCO",k:"Ana Carolina Kühl Coscarelli",t:"furn"},
+  {sid:"177964736",sn:"ALLIGHT IMPORTACAO",gr:"BITLAR",k:"Ana Carolina Kühl Coscarelli",t:"furn"},
+  {sid:"1056981676",sn:"BITLAR HOME_DECOR",gr:"BITLAR",k:"Ana Carolina Kühl Coscarelli",t:"furn"},
+  {sid:"474700795",sn:"DEVINTEXCOSMTICOS",gr:"DEVINTEX",k:"Ana Carolina Kühl Coscarelli",t:"furn"},
+  {sid:"133882293",sn:"INOVA_MOVEIS",gr:"INOVA_MOVEIS",k:"Andre Luiz Dos Santos Nogueira",t:"light"},
+  {sid:"205026329",sn:"KARINA BEBEDOUROS",gr:"KARINA BEBEDOUROS",k:"Andre Luiz Dos Santos Nogueira",t:"light"},
+  {sid:"536398525",sn:"MANUBELITA",gr:"MANUBELITA",k:"Andre Luiz Dos Santos Nogueira",t:"light"},
+  {sid:"494625660",sn:"BRIGIDE STORE",gr:"BRIGIDE STORE",k:"Andre Luiz Dos Santos Nogueira",t:"light"},
+  {sid:"1387566140",sn:"ALTENBURGSTORE",gr:"ALTENBURG",k:"Ane Elisa Silva Bicudo",t:"house"},
+  {sid:"1238801769",sn:"I WANNA SLEEP",gr:"I WANNA SLEEP",k:"Ane Elisa Silva Bicudo",t:"house"},
+  {sid:"622556468",sn:"LUCAS-HOME",gr:"LUCAS HOME",k:"Bruna Silva Soares",t:"furn"},
+  {sid:"1017072559",sn:"ZEBRANDS",gr:"LUNNA COLCHÕES",k:"Bruna Silva Soares",t:"furn"},
+  {sid:"146562601",sn:"ESSENCIA ENXOVAIS",gr:"ESSENCIA ENXOVAIS",k:"Juliana De Carvalho",t:"house"},
+  {sid:"156975586",sn:"GABRIELA_PIRES",gr:"GABRIELA PIRES ENXOVAIS",k:"Juliana De Carvalho",t:"house"},
+  {sid:"721373567",sn:"ATACADISTA TAPETES",gr:"MAGEAL",k:"Juliana De Carvalho",t:"house"},
+  {sid:"403364436",sn:"MAGEAL_OFICIAL",gr:"MAGEAL",k:"Juliana De Carvalho",t:"house"},
+  {sid:"1112436578",sn:"SHOPGRA",gr:"SHOPGRA",k:"Larissa Santos Moraes",t:"house"},
+  {sid:"268944344",sn:"BRINOX",gr:"BRINOX",k:"Larissa Santos Moraes",t:"house"},
+  {sid:"387646263",sn:"LOJA OIKOS",gr:"OIKOS",k:"Larissa Santos Moraes",t:"house"},
+  {sid:"141030308",sn:"CASATEMA",gr:"MADEIRA MADEIRA",k:"Gabriela Margutti",t:"furn"},
+  {sid:"311078705",sn:"MADEIRA-MADEIRA",gr:"MADEIRA MADEIRA",k:"Gabriela Margutti",t:"furn"},
+  {sid:"187308878",sn:"MADEIRAMADEIRA1",gr:"MADEIRA MADEIRA",k:"Gabriela Margutti",t:"furn"},
+  {sid:"566214003",sn:"COLCHÕES PROBEL",gr:"PROBEL",k:"Gabriela Margutti",t:"furn"},
+  {sid:"327947804",sn:"MADESA MÓVEIS",gr:"MADESA",k:"Tatiê Almeida",t:"furn"},
+  {sid:"124110866",sn:"MOBLY",gr:"MOBLY",k:"Tatiê Almeida",t:"house"},
+  {sid:"377486082",sn:"TOK STOK",gr:"TOK STOK",k:"Tatiê Almeida",t:"house"},
+  {sid:"46874279",sn:"CASA FERRARI",gr:"CASA FERRARI",k:"Vanessa Resende Conte",t:"house"},
+  {sid:"524736285",sn:"WEB UTILIDADES",gr:"WEB UTILIDADES",k:"Vanessa Resende Conte",t:"house"},
+  {sid:"193240232",sn:"MEUCOPO",gr:"MEU COPO",k:"Camila Carvalho",t:"house"},
+  {sid:"1598082037",sn:"TEFALOFICIAL",gr:"GRUPO SEB",k:"Camila Carvalho",t:"house"},
+];
+
+const METAS_IBP=[
+  {g:"ESPLANADA",k:"Alexandre de Alencar",jan:13574764,fev:13000000,mar:14000000,abr:16681232,fy:0},
+  {g:"EMMA",k:"Alexandre de Alencar",jan:4539568,fev:4500000,mar:5000000,abr:6000000,fy:0},
+  {g:"LUVINCO",k:"Ana Carolina Kühl Coscarelli",jan:7974973,fev:12000000,mar:12000000,abr:14596788,fy:0},
+  {g:"BITLAR",k:"Ana Carolina Kühl Coscarelli",jan:7878867,fev:6000000,mar:7000000,abr:6700000,fy:0},
+  {g:"MADEIRA MADEIRA",k:"Gabriela Margutti",jan:0,fev:0,mar:0,abr:40000000,fy:0},
+  {g:"PROBEL",k:"Gabriela Margutti",jan:0,fev:0,mar:0,abr:10000000,fy:0},
+  {g:"INOVA_MOVEIS",k:"Andre Luiz Dos Santos Nogueira",jan:5185112,fev:6500000,mar:9500000,abr:11115199,fy:0},
+  {g:"SHOPGRA",k:"Larissa Santos Moraes",jan:0,fev:0,mar:0,abr:6500000,fy:0},
+  {g:"BRINOX",k:"Larissa Santos Moraes",jan:0,fev:0,mar:0,abr:5000000,fy:0},
+  {g:"MADESA",k:"Tatiê Almeida",jan:0,fev:0,mar:0,abr:14000000,fy:0},
+  {g:"MAGEAL",k:"Juliana De Carvalho",jan:0,fev:0,mar:0,abr:5500000,fy:0},
+];
+
+const DIAS=[
+  {d:"01/04",w:"W14",wd:"Ter",isMTG:false,real:11300000,meta:13200000,inv:501571,pre:138125,sad:88396,cupom:3423,pix:106116,pm_c:46198,auto:118304},
+  {d:"02/04",w:"W14",wd:"Qua",isMTG:false,real:10000000,meta:13000000,inv:465957,pre:142821,sad:78743,cupom:13198,pix:83314,pm_c:42675,auto:103729},
+  {d:"03/04",w:"W14",wd:"Qui",isMTG:false,real:11500000,meta:11700000,inv:607169,pre:202469,sad:87023,cupom:24710,pix:97720,pm_c:69565,auto:113512},
+  {d:"04/04",w:"W14",wd:"Sex",isMTG:false,real:14600000,meta:11500000,inv:829720,pre:331043,sad:92931,cupom:59821,pix:134578,pm_c:63616,auto:118096},
+  {d:"05/04",w:"W15",wd:"Sáb",isMTG:false,real:9700000,meta:9800000,inv:448235,pre:161513,sad:73410,cupom:1612,pix:71758,pm_c:43305,auto:95261},
+  {d:"06/04",w:"W15",wd:"Dom",isMTG:false,real:13800000,meta:14900000,inv:641521,pre:224170,sad:108181,cupom:10359,pix:99322,pm_c:56254,auto:140647},
+  {d:"07/04",w:"W15",wd:"Seg",isMTG:false,real:15600000,meta:15200000,inv:853149,pre:271300,sad:130551,cupom:42555,pix:138719,pm_c:69142,auto:164489},
+  {d:"08/04",w:"W15",wd:"Ter",isMTG:false,real:13300000,meta:14900000,inv:566138,pre:209798,sad:100379,cupom:10854,pix:72768,pm_c:33283,auto:134304},
+  {d:"09/04",w:"W15",wd:"Qua",isMTG:false,real:12900000,meta:14200000,inv:587077,pre:207951,sad:98731,cupom:36540,pix:93559,pm_c:23539,auto:125659},
+  {d:"10/04",w:"W15",wd:"Qui",isMTG:false,real:11800000,meta:12900000,inv:622092,pre:199744,sad:91496,cupom:53821,pix:94711,pm_c:24484,auto:116732},
+  {d:"11/04",w:"W15",wd:"Sex",isMTG:false,real:10900000,meta:10700000,inv:588407,pre:195704,sad:76314,cupom:60531,pix:82370,pm_c:24034,auto:98560},
+  {d:"12/04",w:"W16",wd:"Sáb",isMTG:false,real:12000000,meta:11700000,inv:636242,pre:206905,sad:86849,cupom:54546,pix:93899,pm_c:27084,auto:112300},
+  {d:"13/04",w:"W16",wd:"Dom",isMTG:false,real:14500000,meta:14200000,inv:707352,pre:242686,sad:108603,cupom:39198,pix:117517,pm_c:26735,auto:140592},
+  {d:"14/04",w:"W16",wd:"Seg",isMTG:false,real:14400000,meta:14200000,inv:634689,pre:215998,sad:119131,cupom:9789,pix:104083,pm_c:26720,auto:155870},
+  {d:"15/04",w:"W16",wd:"Ter",isMTG:false,real:13800000,meta:13900000,inv:678256,pre:205221,sad:116263,cupom:31087,pix:131426,pm_c:21926,auto:150110},
+  {d:"16/04",w:"W16",wd:"Qua",isMTG:false,real:13000000,meta:13800000,inv:560743,pre:154531,sad:115679,cupom:5863,pix:114808,pm_c:22457,auto:145692},
+  {d:"17/04",w:"W16",wd:"Qui",isMTG:false,real:11000000,meta:10600000,inv:490812,pre:128327,sad:97849,cupom:17913,pix:95951,pm_c:18734,auto:127737},
+  {d:"18/04",w:"W16",wd:"Sex",isMTG:false,real:9500000,meta:9600000,inv:418100,pre:115758,sad:86584,cupom:22960,pix:64414,pm_c:19834,auto:108315},
+  {d:"19/04",w:"W17",wd:"Sáb",isMTG:false,real:10000000,meta:10400000,inv:420137,pre:120897,sad:101774,cupom:10701,pix:55884,pm_c:21013,auto:108191},
+  {d:"20/04",w:"W17",wd:"Dom",isMTG:false,real:12100000,meta:10700000,inv:502110,pre:153942,sad:105911,cupom:1167,pix:96376,pm_c:26990,auto:117311},
+  {d:"21/04",w:"W17",wd:"Seg",isMTG:false,real:11800000,meta:10100000,inv:468133,pre:142800,sad:101310,cupom:406,pix:88612,pm_c:21625,auto:113078},
+  {d:"22/04",w:"W17",wd:"Ter",isMTG:false,real:11700000,meta:13800000,inv:587043,pre:139677,sad:91139,cupom:71636,pix:95132,pm_c:24375,auto:102289},
+  {d:"23/04",w:"W17",wd:"Qua",isMTG:false,real:11700000,meta:13200000,inv:528786,pre:132611,sad:91303,cupom:43857,pix:96814,pm_c:23438,auto:101586},
+  {d:"24/04",w:"W17",wd:"Qui",isMTG:true,real:0,meta:12200000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+  {d:"25/04",w:"W17",wd:"Sex",isMTG:true,real:0,meta:10300000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+  {d:"26/04",w:"W18",wd:"Sáb",isMTG:true,real:0,meta:11000000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+  {d:"27/04",w:"W18",wd:"Dom",isMTG:true,real:0,meta:13800000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+  {d:"28/04",w:"W18",wd:"Seg",isMTG:true,real:0,meta:14100000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+  {d:"29/04",w:"W18",wd:"Ter",isMTG:true,real:0,meta:12800000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+  {d:"30/04",w:"W18",wd:"Qua",isMTG:true,real:0,meta:11200000,inv:0,pre:0,sad:0,cupom:0,pix:0,pm_c:0,auto:0},
+];
+
+// ══ COLOR/HELPERS ══
+const D1C={'FURNITURE':'#1D4ED8','HOUSEHOLD ITEMS':'#B45309','MATTRESSES & SOMMIER':'#9D174D','TEXTILES':'#065F46','DECOR':'#7C3AED','HABERDASHERY':'#0F766E'};
+const D1S=Object.keys(SPLITS);
+const TPILL={furn:'vp-f',house:'vp-h',light:'vp-l'};
+const TLAB={furn:'Furnishing',house:'Houseware',light:'Light F&H'};
+
+function fM(n,d=1){if(!n||isNaN(n)||n===0)return'—';const a=Math.abs(n);if(a>=1e6)return(n<0?'−':'')+'R$'+(a/1e6).toFixed(d)+'M';if(a>=1e3)return(n<0?'−':'')+'R$'+(a/1e3).toFixed(0)+'K';return'R$'+n.toFixed(0);}
+function fN(n){if(!n||isNaN(n))return'—';if(Math.abs(n)>=1e6)return(n/1e6).toFixed(2)+'M';if(Math.abs(n)>=1e3)return(n/1e3).toFixed(0)+'K';return Math.round(n).toString();}
+function fP(n,d=1){if(n==null||isNaN(n))return'—';return(n*100).toFixed(d)+'%';}
+function fPp(n){return(n>=0?'+':'')+fP(n);}
+function pC(v){return v>=1?'ok':v>=.85?'warn':'bad';}
+function dC(v){return v>=0?'pos':'neg';}
+function nasp(a,b){return b>0?a/b:0;}
+function bar(at){const pw=Math.min(at*100,100);const pc=at>=1?'#16A34A':at>=.85?'#D97706':'#DC2626';return`<span class="pb"><span class="pf" style="width:${pw}%;background:${pc}"></span></span>`;}
+const YOY={ca:{nmv:.085,nsi:.11,nasp:-.023,reb:.048},fh:{nmv:.094,nsi:.122,nasp:-.025,reb:.071},oth:{nmv:.062,nsi:.089,nasp:-.012,reb:.041}};
+
+function getD1s(){const f=document.getElementById('g-d1').value;return f?[f]:D1S;}
+
+// ══ AGGREGATE ══
+function agg(d1s,mode){
+  let r={nmv:0,nsi:0,reb:0,meta:0};
+  d1s.forEach(d1=>{
+    const s=SPLITS[d1];
+    if(mode==='ca'){r.nmv+=s.ca_nmv;r.nsi+=s.ca_nsi;r.reb+=s.ca_reb;r.meta+=s.ca_meta;}
+    else if(mode==='fh'){r.nmv+=s.fh_nmv;r.nsi+=s.fh_nsi;r.reb+=s.fh_reb;r.meta+=s.fh_meta;}
+    else{r.nmv+=s.oth_nmv;r.nsi+=s.oth_nsi;r.reb+=s.oth_reb;r.meta+=s.oth_meta;}
+  });
+  return r;
+}
+
+// ══ METRIC CARD ══
+function mc(label,rv,mv,yoy,fmt,sob,sobCls){
+  const at=mv>0?rv/mv:null,gap=rv-mv;
+  let v='',gs='';
+  if(fmt==='nmv'){v=fM(rv);gs=fM(gap);}
+  else if(fmt==='nsi'){v=fN(rv);gs=fN(gap);}
+  else if(fmt==='nasp'){v='R$'+Math.round(rv);gs='R$'+(gap>=0?'+':'')+Math.round(gap);}
+  else{v=fM(rv,2);gs=fM(gap);}
+  const atCls=at!=null?pC(at):'dim';
+  const sobH=sob?`<div class="mc-sob ${sobCls}">${sob}</div>`:'';
+  return `<div class="mc">
+    <div class="mc-label">${label}</div><div class="mc-val">${v}</div>${sobH}
+    <div class="mc-rows">
+      <div class="mc-row"><span class="mc-rl">YoY</span><span class="mc-rv ${yoy>=0?'pos':'neg'}">${fPp(yoy)}</span></div>
+      <div class="mc-row"><span class="mc-rl">vs Meta</span><span class="mc-rv ${atCls}">${at!=null?fP(at):'—'}</span></div>
+      <div class="mc-row"><span class="mc-rl">Gap</span><span class="mc-rv ${dC(gap)}">${gs}</span></div>
+    </div></div>`;
+}
+
+// ══ RENDER SUMMARY BLOCKS ══
+let drillMode='ca';
+function renderSummaryBlocks(){
+  const d1s=getD1s();
+  const ca=agg(d1s,'ca'),fh=agg(d1s,'fh'),oth=agg(d1s,'oth');
+  const ca_nasp=nasp(ca.nmv,ca.nsi),fh_nasp=nasp(fh.nmv,fh.nsi),oth_nasp=nasp(oth.nmv,oth.nsi);
+  const fh_sob_nmv=ca.nmv>0?fP(fh.nmv/ca.nmv)+' do CA':'—';
+  const fh_sob_nsi=ca.nsi>0?fP(fh.nsi/ca.nsi)+' do CA':'—';
+  const oth_sob_nmv=ca.nmv>0?fP(oth.nmv/ca.nmv)+' do CA':'—';
+  const oth_sob_nsi=ca.nsi>0?fP(oth.nsi/ca.nsi)+' do CA':'—';
+  const blocks=[
+    {col:'var(--ca)',t:'CA Total',sub:'Visão oficial companhia',lbl:'Oficial',nota:'',mode:'ca',
+     nmv:{r:ca.nmv,m:ca.meta,sob:null,sc:''},nsi:{r:ca.nsi,m:0,sob:null,sc:''},
+     nasp:{r:ca_nasp,m:0},reb:{r:ca.reb,m:0},yoy:YOY.ca},
+    {col:'var(--fh)',t:'Gestão F&H',sub:'Sellers MeliPro F&H · 283 sellers',lbl:'Carteira',nota:'',mode:'fh',
+     nmv:{r:fh.nmv,m:fh.meta,sob:fh_sob_nmv,sc:'sob-fh'},nsi:{r:fh.nsi,m:0,sob:fh_sob_nsi,sc:'sob-fh'},
+     nasp:{r:fh_nasp,m:0},reb:{r:fh.reb,m:0},yoy:YOY.fh},
+    {col:'var(--oth)',t:'Gestão Others',sub:'Outras verticais · 685 sellers CA',lbl:'Derivado',nota:'Meta = CA Total − F&H',mode:'oth',
+     nmv:{r:oth.nmv,m:oth.meta,sob:oth_sob_nmv,sc:'sob-oth'},nsi:{r:oth.nsi,m:0,sob:oth_sob_nsi,sc:'sob-oth'},
+     nasp:{r:oth_nasp,m:0},reb:{r:oth.reb,m:0},yoy:YOY.oth},
+  ];
+  document.getElementById('sum-blocks').innerHTML=blocks.map(b=>`
+    <div class="block">
+      <div class="block-hdr" style="background:${b.col}">
+        <div><div class="block-title">${b.t}</div><div class="block-sub">${b.sub}</div></div>
+        <span class="blbl">${b.lbl}</span>
+      </div>
+      <div class="metric-grid">
+        ${mc('NMV',b.nmv.r,b.nmv.m,b.yoy.nmv,'nmv',b.nmv.sob,b.nmv.sc)}
+        ${mc('NSI',b.nsi.r,b.nsi.m,b.yoy.nsi,'nsi',b.nsi.sob,b.nsi.sc)}
+        ${mc('NASP',b.nasp.r,b.nasp.m,b.yoy.nasp,'nasp',null,'')}
+        ${mc('Rebates',b.reb.r,b.reb.m,b.yoy.reb,'reb',null,'')}
+      </div>
+      ${b.nota?`<div style="padding:5px 12px;border-top:1px solid var(--border);font-size:8px;color:var(--oth);background:#FFFBEB">ℹ ${b.nota}</div>`:''}
+    </div>`).join('');
+}
+
+// ══ DRILL DOWN ══
+function setDrill(m){
+  drillMode=m;
+  ['ca','fh','oth'].forEach(x=>document.getElementById('dt-'+x).className='dtab'+(x===m?' a-'+x:''));
+  renderDrill();
+}
+
+function getV(d1,field,m){
+  const s=SPLITS[d1];
+  const map={ca:{nmv:s.ca_nmv,nsi:s.ca_nsi,reb:s.ca_reb,meta:s.ca_meta},
+             fh:{nmv:s.fh_nmv,nsi:s.fh_nsi,reb:s.fh_reb,meta:s.fh_meta},
+             oth:{nmv:s.oth_nmv,nsi:s.oth_nsi,reb:s.oth_reb,meta:s.oth_meta}};
+  return map[m][field]||0;
+}
+
+function renderDrill(){
+  const d1s=getD1s(),m=drillMode;
+  const col=m==='ca'?'var(--ca)':m==='fh'?'var(--fh)':'var(--oth)';
+  const colBg=m==='ca'?'#EFF6FF':m==='fh'?'#F5F3FF':'#FFFBEB';
+  const colBd=m==='ca'?'#BFDBFE':m==='fh'?'#DDD6FE':'#FDE68A';
+  const isOth=m==='oth';
+
+  let tot={nmv:0,meta:0,nsi:0,reb:0};
+  d1s.forEach(d1=>{tot.nmv+=getV(d1,'nmv',m);tot.meta+=getV(d1,'meta',m);tot.nsi+=getV(d1,'nsi',m);tot.reb+=getV(d1,'reb',m);});
+
+  document.getElementById('dh').innerHTML=`
+    <tr>
+      <th class="L" style="background:${m==='ca'?'var(--ca)':m==='fh'?'var(--fh)':'var(--oth)'};min-width:220px" rowspan="2">Categoria</th>
+      <th colspan="3" style="background:${m==='ca'?'var(--ca)':m==='fh'?'var(--fh)':'var(--oth)'};text-align:center;border-left:1px solid rgba(255,255,255,.2)">NMV</th>
+      <th colspan="2" style="background:${m==='ca'?'var(--ca)':m==='fh'?'var(--fh)':'var(--oth)'};text-align:center;border-left:1px solid rgba(255,255,255,.2)">NSI</th>
+      <th colspan="2" style="background:${m==='ca'?'var(--ca)':m==='fh'?'var(--fh)':'var(--oth)'};text-align:center;border-left:1px solid rgba(255,255,255,.2)">NASP</th>
+      <th colspan="2" style="background:${m==='ca'?'var(--ca)':m==='fh'?'var(--fh)':'var(--oth)'};text-align:center;border-left:1px solid rgba(255,255,255,.2)">Rebates</th>
+    </tr>
+    <tr>
+      <th style="background:${colBg};border-left:1px solid ${colBd}">Real</th><th style="background:${colBg}">Meta${isOth?' ⊗':''}</th><th style="background:${colBg}">%At.</th>
+      <th style="background:${colBg};border-left:1px solid ${colBd}">Real</th><th style="background:${colBg}">%SoB</th>
+      <th style="background:${colBg};border-left:1px solid ${colBd}">Real</th><th style="background:${colBg}">CA Ref.</th>
+      <th style="background:${colBg};border-left:1px solid ${colBd}">Real</th><th style="background:${colBg}">%NMV</th>
+    </tr>`;
+
+  function mkR(lbl,d1k,type,tid,nr,nm,nsi,reb){
+    const isTot=type==='tot',isD1=type==='d1',isD2=type==='d2';
+    const at=nm>0?nr/nm:0;
+    const sob_nsi=m!=='ca'&&SPLITS[d1k]?fP(nsi/SPLITS[d1k].ca_nsi):'—';
+    const nasp_r=nasp(nr,nsi);
+    const nasp_ca=d1k&&SPLITS[d1k]?nasp(SPLITS[d1k].ca_nmv,SPLITS[d1k].ca_nsi):0;
+    const pct_reb=nr>0?reb/nr:0;
+    const col2=D1C[d1k]||col;
+    const idA=isD2?`id="${tid}"`:''
+    const disp=isD2?'style="display:none"':'';
+    const oc=isD1?`onclick="togD('${tid}')"`:''
+    let lh=isTot?`<b style="color:${col}">Total</b>`:isD1?`<span class="vbar" style="background:${col2}"></span><span class="chev" id="dc_${tid}">▶</span><b style="color:${col2}">${lbl}</b>`:`<span>${lbl}</span>`;
+    return `<tr class="${isTot?'tot':isD1?'d1r':'d2r'}" ${idA} ${disp}>
+      <td class="L" ${oc} style="${isD2?'padding-left:22px;color:var(--text2)':''}">${lh}</td>
+      <td style="border-left:1px solid ${colBd}" class="${isD2?'dim':pC(at)}">${fM(nr)}</td>
+      <td class="dim">${fM(nm)}</td>
+      <td>${isD2?'—':`<span class="${pC(at)}">${fP(at)}</span>${isD1?bar(at):''}`}</td>
+      <td style="border-left:1px solid ${colBd}">${fN(nsi)}</td>
+      <td class="dim">${isD2?'—':sob_nsi}</td>
+      <td style="border-left:1px solid ${colBd}">${nasp_r>0?'R$'+Math.round(nasp_r):'—'}</td>
+      <td class="dim">${nasp_ca>0?'R$'+Math.round(nasp_ca):'—'}</td>
+      <td style="border-left:1px solid ${colBd}" class="${isD2?'dim':''}">${fM(reb,2)}</td>
+      <td class="${dC(pct_reb-.045)}">${fP(pct_reb)}</td>
+    </tr>`;
+  }
+
+  let html=mkR('',null,'tot','',tot.nmv,tot.meta,tot.nsi,tot.reb);
+  d1s.forEach(d1=>{
+    const tid='d_'+d1.replace(/[\s&]/g,'_')+'_'+m;
+    html+=mkR(d1,d1,'d1',tid,getV(d1,'nmv',m),getV(d1,'meta',m),getV(d1,'nsi',m),getV(d1,'reb',m));
+    (D2[d1]||[]).forEach(x=>{
+      const sh=m==='ca'?1:m==='fh'?x.fh_sh:1-x.fh_sh;
+      html+=mkR(x.d2,d1,'d2',tid,x.ca_nmv*sh,x.ca_meta*sh,x.ca_nsi*sh,x.ca_reb*sh);
+    });
+  });
+  document.getElementById('db').innerHTML=html;
+  const tr=document.querySelector('#db tr.tot');
+  if(tr)tr.querySelectorAll('td').forEach(td=>{td.style.background=colBg;td.style.borderTop=`2px solid ${colBd}`;td.style.fontWeight='700';td.style.color=col;td.style.fontSize='11px';});
+  renderHL(d1s,m);
+}
+
+function togD(id){
+  const rows=document.querySelectorAll(`tr[id="${id}"]`);
+  const ch=document.getElementById('dc_'+id);
+  const open=rows[0]?.style.display!=='none';
+  rows.forEach(r=>r.style.display=open?'none':'');
+  if(ch)ch.className='chev'+(open?'':' open');
+}
+
+// ══ HIGHS / LOWS ══
+function renderHL(d1s,m){
+  const all=[];
+  d1s.forEach(d1=>{
+    (D2[d1]||[]).forEach(x=>{
+      const sh=m==='ca'?1:m==='fh'?x.fh_sh:1-x.fh_sh;
+      const nr=x.ca_nmv*sh,nm=x.ca_meta*sh,nsi=x.ca_nsi*sh;
+      if(nm>0) all.push({d2:x.d2,d1,nr,nm,nsi,gap:nr-nm});
+    });
+  });
+  const highs=[...all].filter(x=>x.gap>0).sort((a,b)=>b.gap-a.gap).slice(0,2);
+  const lows=[...all].filter(x=>x.gap<0).sort((a,b)=>a.gap-b.gap).slice(0,2);
+  const top_nsi=[...all].sort((a,b)=>b.nsi-a.nsi).slice(0,2);
+  const low_nasp=[...all].filter(x=>x.nr>0&&x.nsi>0).sort((a,b)=>nasp(b.nr,b.nsi)-nasp(a.nr,a.nsi)).slice(0,2);
+  function hlI(d,type){
+    const col2=D1C[d.d1]||'#374151';
+    const isNMV=type==='nmv';
+    let val,gapStr,gapCls,detail;
+    if(isNMV){val=fM(d.nr);gapStr=(d.gap>=0?'+':'')+fM(d.gap)+' vs meta';gapCls=dC(d.gap);detail=fP(d.nr/d.nm)+' ating. · Meta '+fM(d.nm);}
+    else{val=fN(d.nsi)+' NSI';gapStr='NASP R$'+Math.round(nasp(d.nr,d.nsi));gapCls='dim';detail='NMV '+fM(d.nr);}
+    return `<div class="hl-item"><span class="hl-m m-${type}">${type.toUpperCase()}</span>
+      <div><div class="hl-name">${d.d2}</div><div class="hl-d1" style="color:${col2}">${d.d1}</div></div>
+      <div class="hl-right"><div class="hl-num">${val}</div><div class="hl-gap ${gapCls}">${gapStr}</div><div style="font-size:8px;color:var(--text3)">${detail}</div></div>
+    </div>`;
+  }
+  document.getElementById('hl-row').innerHTML=`
+    <div class="hl-box">
+      <div class="hl-hdr H"><span style="font-size:14px">▲</span><span class="hl-title H">Highs</span><span class="hl-sub">D2s com maior contribuição positiva</span></div>
+      ${highs.map(d=>hlI(d,'nmv')).join('')}${top_nsi.map(d=>hlI(d,'nsi')).join('')}
+    </div>
+    <div class="hl-box">
+      <div class="hl-hdr L"><span style="font-size:14px">▼</span><span class="hl-title L">Lows</span><span class="hl-sub">D2s com maior impacto negativo na meta</span></div>
+      ${lows.map(d=>hlI(d,'nmv')).join('')}${low_nasp.map(d=>hlI(d,'nsi')).join('')}
+    </div>`;
+}
+
+// ══ GESTÃO F&H ══
+const GRUPOS=[
+  {g:"ESPLANADA",k:"Alexandre de Alencar",t:"furn",meta_fm:16681232,real_mtd:22400000,meta_mtd:13000000},
+  {g:"EMMA",k:"Alexandre de Alencar",t:"furn",meta_fm:6000000,real_mtd:5100000,meta_mtd:4667000},
+  {g:"LUVINCO",k:"Ana Carolina Kühl Coscarelli",t:"furn",meta_fm:14596788,real_mtd:18200000,meta_mtd:11353000},
+  {g:"BITLAR",k:"Ana Carolina Kühl Coscarelli",t:"furn",meta_fm:6700000,real_mtd:5800000,meta_mtd:5211000},
+  {g:"MADEIRA MADEIRA",k:"Gabriela Margutti",t:"furn",meta_fm:40000000,real_mtd:36000000,meta_mtd:31111000},
+  {g:"PROBEL",k:"Gabriela Margutti",t:"furn",meta_fm:10000000,real_mtd:7000000,meta_mtd:7778000},
+  {g:"INOVA_MOVEIS",k:"Andre Luiz Dos Santos Nogueira",t:"light",meta_fm:11115199,real_mtd:13500000,meta_mtd:8645000},
+  {g:"SHOPGRA",k:"Larissa Santos Moraes",t:"house",meta_fm:6500000,real_mtd:5800000,meta_mtd:5056000},
+  {g:"BRINOX",k:"Larissa Santos Moraes",t:"house",meta_fm:5000000,real_mtd:4400000,meta_mtd:3889000},
+  {g:"MAGEAL",k:"Juliana De Carvalho",t:"house",meta_fm:5500000,real_mtd:4800000,meta_mtd:4278000},
+  {g:"MADESA",k:"Tatiê Almeida",t:"furn",meta_fm:14000000,real_mtd:12000000,meta_mtd:10889000},
+  {g:"MOBLY",k:"Tatiê Almeida",t:"house",meta_fm:7000000,real_mtd:5800000,meta_mtd:5444000},
+  {g:"ALTENBURG",k:"Ane Elisa Silva Bicudo",t:"house",meta_fm:2500000,real_mtd:1400000,meta_mtd:1944000},
+  {g:"I WANNA SLEEP",k:"Ane Elisa Silva Bicudo",t:"house",meta_fm:780283,real_mtd:680000,meta_mtd:607000},
+];
+
+function renderFH(){
+  const kf=document.getElementById('fh-kam').value;
+  const view=document.getElementById('fh-view').value;
+  const data=kf?GRUPOS.filter(r=>r.k===kf):GRUPOS;
+  const tot_meta=data.reduce((s,r)=>s+r.meta_fm,0);
+  const tot_real=data.reduce((s,r)=>s+r.real_mtd,0);
+  const tot_meta_mtd=data.reduce((s,r)=>s+r.meta_mtd,0);
+  const at=tot_meta_mtd>0?tot_real/tot_meta_mtd:0;
+  document.getElementById('fh-kpi-row').innerHTML=[
+    {l:'Meta FM',v:fM(tot_meta),s:'Meta IBP ciclo 3+9',c:'var(--fh)'},
+    {l:'Realizado MTD',v:fM(tot_real),s:'até 23/Abr · D-1',c:'#111'},
+    {l:'% Atingimento',v:fP(at),s:'Gap: '+fM(tot_real-tot_meta_mtd),c:at>=1?'var(--ok)':at>=.85?'var(--warn)':'var(--bad)'},
+    {l:'Grupos ativos',v:data.length,s:kf||'todos os KAMs',c:'#374151'},
+  ].map(k=>`<div style="background:#fff;border-radius:10px;padding:10px 14px;border:1px solid var(--border);border-top:3px solid ${k.c}">
+    <div style="font-size:8px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${k.l}</div>
+    <div style="font-size:19px;font-weight:800;font-family:var(--font-h);color:${k.c}">${k.v}</div>
+    <div style="font-size:10px;color:var(--text2);margin-top:3px">${k.s}</div>
+  </div>`).join('');
+
+  document.getElementById('fh-head').innerHTML=`
+    <tr>
+      <th class="L" style="background:var(--fh);min-width:200px" rowspan="2">Grupo de Contas</th>
+      <th rowspan="2" style="background:var(--fh);text-align:left">KAM</th>
+      <th colspan="4" style="background:var(--fh);text-align:center;border-left:1px solid rgba(255,255,255,.2)">NMV ${view==='fh'?'F&H do Seller':'Total Seller'}</th>
+    </tr>
+    <tr>
+      <th style="background:#F5F3FF;border-left:1px solid #DDD6FE;color:var(--text3)">Real MTD</th>
+      <th style="background:#F5F3FF;color:var(--text3)">Meta MTD</th>
+      <th style="background:#F5F3FF;color:var(--text3)">% Ating.</th>
+      <th style="background:#F5F3FF;color:var(--text3)">Gap</th>
+    </tr>`;
+
+  let html=`<tr class="tot" style="background:#F5F3FF;border-top:2px solid #DDD6FE;color:var(--fh);font-weight:700">
+    <td class="L" colspan="2"><b>Total</b></td>
+    <td style="border-left:1px solid #DDD6FE" class="${pC(at)}">${fM(tot_real)}</td>
+    <td>${fM(tot_meta_mtd)}</td>
+    <td class="${pC(at)}">${fP(at)}</td>
+    <td class="${dC(tot_real-tot_meta_mtd)}">${fM(tot_real-tot_meta_mtd)}</td>
+  </tr>`;
+  data.sort((a,b)=>b.real_mtd-a.real_mtd).forEach(r=>{
+    const at2=r.meta_mtd>0?r.real_mtd/r.meta_mtd:0;
+    const col2=D1C[r.t==='furn'?'FURNITURE':r.t==='house'?'HOUSEHOLD ITEMS':'TEXTILES']||'#374151';
+    html+=`<tr class="d1r"><td class="L" style="font-weight:600"><span class="vbar" style="background:${col2}"></span>${r.g}</td>
+      <td class="L" style="font-size:10px;color:var(--text2)">${r.k}</td>
+      <td style="border-left:1px solid #DDD6FE" class="${pC(at2)}">${fM(r.real_mtd)}</td>
+      <td class="dim">${fM(r.meta_mtd)}</td>
+      <td class="${pC(at2)}">${fP(at2)}${bar(at2)}</td>
+      <td class="${dC(r.real_mtd-r.meta_mtd)}">${fM(r.real_mtd-r.meta_mtd)}</td>
+    </tr>`;
+  });
+  document.getElementById('fh-body').innerHTML=html;
+}
+
+// ══ OTHERS ══
+function renderOthers(){
+  const d1s=getD1s();
+  const oth=agg(d1s,'oth');
+  document.getElementById('oth-kpi-row').innerHTML=[
+    {l:'NMV Others MTD',v:fM(oth.nmv),s:'Sellers CA fora da carteira',c:'var(--oth)'},
+    {l:'Meta Derivada MTD',v:fM(oth.meta),s:'CA Total − Gestão F&H',c:'#374151'},
+    {l:'% Atingimento',v:fP(oth.meta>0?oth.nmv/oth.meta:0),s:'Gap: '+fM(oth.nmv-oth.meta),c:oth.nmv>=oth.meta?'var(--ok)':'var(--bad)'},
+    {l:'Sellers Others',v:'685',s:'identificados no CA Abril',c:'#374151'},
+  ].map(k=>`<div style="background:#fff;border-radius:10px;padding:10px 14px;border:1px solid var(--border);border-top:3px solid ${k.c}">
+    <div style="font-size:8px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${k.l}</div>
+    <div style="font-size:19px;font-weight:800;font-family:var(--font-h);color:${k.c}">${k.v}</div>
+    <div style="font-size:10px;color:var(--text2);margin-top:3px">${k.s}</div>
+  </div>`).join('');
+
+  let html='';
+  d1s.forEach(d1=>{
+    const top=(TOP_OTH[d1]||[]);
+    if(!top.length) return;
+    const col2=D1C[d1]||'#374151';
+    top.forEach((s,i)=>{
+      const nasp_v=0;
+      html+=`<tr>
+        <td class="L" style="${i===0?'border-top:2px solid '+col2+';':''};padding-left:${i===0?10:22}px">
+          ${i===0?`<span class="vbar" style="background:${col2}"></span><b style="color:${col2}">${s.name}</b>`:`<span style="color:var(--text2)">${s.name}</span>`}
+        </td>
+        <td>${i===0?`<span style="font-size:9px;background:${col2}22;color:${col2};padding:1px 6px;border-radius:6px;font-weight:600">${d1}</span>`:'↳'}</td>
+        <td style="color:${col2};font-weight:${i===0?700:400}">${fM(s.nmv)}</td>
+        <td>—</td><td>—</td><td>—</td>
+      </tr>`;
+    });
+  });
+  document.getElementById('oth-body').innerHTML=html||'<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Nenhum dado disponível para o filtro selecionado</td></tr>';
+}
+
+// ══ DIARIZADO ══
+let diarView='ca';
+function setDiarView(v){
+  diarView=v;
+  ['ca','fh','oth'].forEach(x=>document.getElementById('dv-'+x).className='dtab'+(x===v?' a-'+x:''));
+  renderDiarizado();
+}
+
+function renderDiarizado(){
+  const sc=diarView==='ca'?1:diarView==='fh'?TOTALS.fh_nmv/TOTALS.ca_nmv:TOTALS.oth_nmv/TOTALS.ca_nmv;
+  const col=diarView==='ca'?'var(--ca)':diarView==='fh'?'var(--fh)':'var(--oth)';
+  const colBg=diarView==='ca'?'#EFF6FF':diarView==='fh'?'#F5F3FF':'#FFFBEB';
+  const fmMeta=DIAS.reduce((s,d)=>s+d.meta,0)*sc;
+  let acc_real=0,acc_meta=0;
+  const mtd_dias=DIAS.filter(d=>!d.isMTG);
+  const real_mtd_total=mtd_dias.reduce((s,d)=>s+d.real,0)*sc;
+  const meta_mtd_total=mtd_dias.reduce((s,d)=>s+d.meta,0)*sc;
+  const at_mtd=meta_mtd_total>0?real_mtd_total/meta_mtd_total:0;
+  document.getElementById('diar-kpi-row').innerHTML=[
+    {l:'Meta FM',v:fM(fmMeta),s:'Ciclo 3+9',c:col},
+    {l:'Realizado MTD',v:fM(real_mtd_total),s:'até 23/Abr',c:'#111'},
+    {l:'% Atingimento',v:fP(at_mtd),s:'Gap: '+fM(real_mtd_total-meta_mtd_total),c:at_mtd>=1?'var(--ok)':at_mtd>=.85?'var(--warn)':'var(--bad)'},
+    {l:'Projeção FM',v:fM(fmMeta*at_mtd),s:'Run rate atual',c:fmMeta*at_mtd>=fmMeta?'var(--ok)':'var(--warn)'},
+    {l:'Dias restantes',v:DIAS.filter(d=>d.isMTG).length,s:'dias a realizar',c:'#374151'},
+  ].map(k=>`<div style="background:#fff;border-radius:10px;padding:10px 14px;border:1px solid var(--border);border-top:3px solid ${k.c}">
+    <div style="font-size:8px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${k.l}</div>
+    <div style="font-size:17px;font-weight:800;font-family:var(--font-h);color:${k.c}">${k.v}</div>
+    <div style="font-size:10px;color:var(--text2);margin-top:3px">${k.s}</div>
+  </div>`).join('');
+
+  document.getElementById('diar-head').innerHTML=`<tr>
+    <th class="L">Data</th><th class="L">Sem.</th><th class="L">Dia</th><th>Status</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">NMV Dia</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">Meta Dia</th><th>% At.</th><th>Gap</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">Inv. Total</th><th>%NMV</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">Pre Acordo</th><th>%</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">SAD</th><th>%</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">Cupom</th><th>%</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">PIX</th><th>%</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">PM Cofin.</th><th>%</th>
+    <th style="border-left:2px solid rgba(255,255,255,.2)">Auto.</th><th>%</th>
+  </tr>`;
+
+  let html='';let prevW='';acc_real=0;acc_meta=0;
+  DIAS.forEach((d,i)=>{
+    const isNewW=d.w!==prevW;prevW=d.w;
+    const real=Math.round(d.real*sc),meta=Math.round(d.meta*sc),inv=Math.round(d.inv*sc);
+    if(!d.isMTG)acc_real+=real;
+    acc_meta+=meta;
+    const at_d=meta>0?real/meta:0;
+    const proj=acc_meta>0?fmMeta*(acc_real/acc_meta):0;
+    const nr=real||1;
+    const cls=(d.isMTG?'mtg':'')+' '+(isNewW&&i>0?'sep':'');
+    if(!d.isMTG){
+      html+=`<tr class="${cls}">
+        <td class="L"><b>${d.d}</b></td><td class="L"><span class="wbadge">${d.w}</span></td><td class="L" style="color:var(--text2)">${d.wd}</td>
+        <td><span class="mtd-pill">MTD</span></td>
+        <td style="border-left:2px solid #E5E7EB" class="${pC(at_d)}">${fM(real)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(meta)}</td>
+        <td class="${pC(at_d)}">${fP(at_d)}</td>
+        <td class="${dC(real-meta)}">${fM(real-meta)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(inv)}</td><td class="dim">${fP(inv/nr)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(Math.round(d.pre*sc))}</td><td class="dim">${fP(d.pre/d.real)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(Math.round(d.sad*sc))}</td><td class="dim">${fP(d.sad/d.real)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(Math.round(d.cupom*sc))}</td><td class="dim">${fP(d.cupom/d.real)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(Math.round(d.pix*sc))}</td><td class="dim">${fP(d.pix/d.real)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(Math.round(d.pm_c*sc))}</td><td class="dim">${fP(d.pm_c/d.real)}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(Math.round(d.auto*sc))}</td><td class="dim">${fP(d.auto/d.real)}</td>
+      </tr>`;
+    } else {
+      const proj_d=acc_meta>0?meta*(acc_real/acc_meta):0;
+      html+=`<tr class="${cls} mtg">
+        <td class="L"><b>${d.d}</b></td><td class="L"><span class="wbadge">${d.w}</span></td><td class="L">${d.wd}</td>
+        <td><span class="mtg-pill">MTG</span></td>
+        <td style="border-left:2px solid #E5E7EB" class="proj">${proj_d>0?fM(proj_d):'—'}</td>
+        <td style="border-left:2px solid #E5E7EB">${fM(meta)}</td>
+        <td class="${proj_d>0?pC(proj_d/meta):''}">${proj_d>0?fP(proj_d/meta):'—'}</td>
+        <td class="${proj_d>0?dC(proj_d-meta):''}">${proj_d>0?fM(proj_d-meta):'—'}</td>
+        <td colspan="14" style="color:var(--text3);font-size:9px;text-align:left;padding-left:8px;border-left:2px solid #E5E7EB">Projeção baseada no % ating. acumulado (${fP(acc_meta>0?acc_real/acc_meta:0)})</td>
+      </tr>`;
+    }
+  });
+  document.getElementById('diar-body').innerHTML=html;
+}
+
+// ══ SETUP ══
+function renderSetupEquipe(){
+  const TC={furn:'var(--fh)',house:'#059669',light:'var(--oth)'};
+  const TP={furn:'vp-f',house:'vp-h',light:'vp-l'};
+  document.getElementById('setup-equipe-body').innerHTML=EQUIPE.map(e=>`
+    <tr>
+      <td class="L" style="font-weight:600">${e.e}</td>
+      <td class="L"><span class="vpill ${TP[e.t]}">${e.tl}</span></td>
+      <td><span class="cycle-badge">${e.c}</span></td>
+      <td style="color:var(--text2);font-size:10px">${e.vi}</td>
+      <td><span class="status-ok">Ativo</span></td>
+    </tr>`).join('');
+}
+
+function renderSetupSellers(){
+  const q=(document.getElementById('seller-q')?.value||'').toLowerCase();
+  const data=q?SELLERS_CTRL.filter(r=>r.gr.toLowerCase().includes(q)||r.sn.toLowerCase().includes(q)||r.k.toLowerCase().includes(q)||r.sid.includes(q)):SELLERS_CTRL;
+  const TC={furn:'var(--fh)',house:'#059669',light:'var(--oth)'};
+  const TP={furn:'vp-f',house:'vp-h',light:'vp-l'};
+  document.getElementById('setup-sellers-count').textContent=`Grupos de Contas — ${data.length} sellers`;
+  document.getElementById('setup-sellers-body').innerHTML=data.map(r=>`
+    <tr>
+      <td class="L" style="font-family:var(--mono);font-size:10px;color:var(--meli3)">${r.sid}</td>
+      <td class="L" style="font-weight:500">${r.sn}</td>
+      <td class="L">${r.gr}</td>
+      <td class="L" style="color:var(--text2)">${r.k}</td>
+      <td class="L"><span class="vpill ${TP[r.t]}">${TLAB[r.t]}</span></td>
+    </tr>`).join('');
+}
+
+function renderSetupMetas(){
+  document.getElementById('setup-metas-body').innerHTML=METAS_IBP.map(r=>`
+    <tr>
+      <td class="L" style="font-weight:600">${r.g}</td>
+      <td class="L" style="color:var(--text2);font-size:10px">${r.k}</td>
+      <td>${r.jan>0?fM(r.jan):'—'}</td>
+      <td>${r.fev>0?fM(r.fev):'—'}</td>
+      <td>${r.mar>0?fM(r.mar):'—'}</td>
+      <td style="color:var(--fh);font-weight:700">${r.abr>0?fM(r.abr):'—'}</td>
+      <td class="dim">${r.fy>0?fM(r.fy):'—'}</td>
+    </tr>`).join('');
+}
+
+// ══ TABS ══
+function showTab(t,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  el.classList.add('active');
+}
+
+function showSetup(t,el){
+  document.querySelectorAll('.setup-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
+  document.getElementById('setup-'+t).classList.add('active');
+  el.classList.add('active');
+}
+
+// ══ POPULATE SELECTS ══
+function initSelects(){
+  const kams=[...new Set(GRUPOS.map(r=>r.k))].sort();
+  const fhk=document.getElementById('fh-kam');
+  kams.forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;fhk.appendChild(o);});
+}
+
+// ══ RENDER ALL ══
+function renderAll(){
+  renderSummaryBlocks();
+  renderDrill();
+  renderFH();
+  renderOthers();
+  renderDiarizado();
+}
+
+// ══ INIT ══
+initSelects();
+renderAll();
+renderSetupEquipe();
+renderSetupSellers();
+renderSetupMetas();
+</script>
+</body></html>
